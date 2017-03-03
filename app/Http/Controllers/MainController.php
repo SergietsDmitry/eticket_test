@@ -33,7 +33,6 @@ class MainController extends Controller
     {
         $sxe = new \SimpleXMLElement('<packagedElement></packagedElement>');
         
-        
         $security = $sxe->addChild('Security');
         $security->addChild('Username', 'test');
         $security->addChild('Password', 'b4ApBWIaD9qK');
@@ -70,9 +69,11 @@ class MainController extends Controller
         ]);
         
         $json  = json_encode($sxe);
-        $array = json_decode($json,TRUE);
+        $array = json_decode($json, TRUE);
+        
+        //dd($array);
 
-        //$response = $soapclient->ETM_DoAirFareRequest($array);
+        $response = $soapclient->__soapCall('ETM_DoAirFareRequest', $array);
 
         return view('main.search_page', [
             'title' => 'E-tickets',
