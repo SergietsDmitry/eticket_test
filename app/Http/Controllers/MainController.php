@@ -42,13 +42,13 @@ class MainController extends Controller
         
         $period_start = $xml->addChild('OriginDestinationInformation');
         $period_start->addAttribute('type', 'OriginDestinationInformationType');
-        $period_start->addChild('DepartureDateTime', date('Y-m-d H:i:s', strtotime('2014-08-16 00:00:00')));
+        $period_start->addChild('DepartureDateTime', date("Y-m-d\TH:i:s", strtotime('2014-08-16 00:00:00')));
         $period_start->addChild('OriginLocation', 'MOW');
         $period_start->addChild('DestinationLocation', 'MUC');
         
         $period_end = $xml->addChild('OriginDestinationInformation');
         $period_end->addAttribute('type', 'OriginDestinationInformationType');
-        $period_end->addChild('DepartureDateTime', date('Y-m-d H:i:s', strtotime('2014-08-16 00:00:00')));
+        $period_end->addChild('DepartureDateTime', date("Y-m-d\TH:i:s", strtotime('2014-08-16 00:00:00')));
         $period_end->addChild('OriginLocation', 'MUC');
         $period_end->addChild('DestinationLocation', 'MOW');
         
@@ -68,7 +68,13 @@ class MainController extends Controller
         $preferences->addChild('BookingClassPref', 'E');
         $preferences->addChild('OnlyDirectPref', true);
         
-        //$xml_new = explode("\n", $xml->asXML(), 2)[1];
+        $as_xml = $xml->asXML();
+        $as_xml = explode("\n", $as_xml, 2);
+        $as_xml = (isset($as_xml[1])) ? $as_xml[1] : $request;
+        $as_xml = str_replace("\n", '', $as_xml);
+        $as_xml = trim($as_xml);
+        
+        $DoAirFareRQ = new \SoapVar($as_xml, XSD_ANYXML);
         
         $stream_context = stream_context_create([
             'ssl' => [
@@ -88,21 +94,13 @@ class MainController extends Controller
             'soap_version'   => SOAP_1_1
         ]);
         
-        //$soap_client->__setSoapHeaders(NULL); 
-        
-        //$xmlVar = simplexml_load_string($xml_new);
-        
         try
         {
-            $response = $soap_client->ETM_DoAirFareRequest($xml, false);
+            $response = $soap_client->ETM_DoAirFareRequest($DoAirFareRQ);
         } catch (\SoapFault $ex) {
              //dd($ex);
         }
-        
-            //$xml_new = explode("\n", $soap_client->__getLastRequest(), 2)[1];
-            
-            //dd($soapclient->__getLastRequest(), $xml_new);
-            
+
         dd($soap_client->__getLastResponse(), $soap_client->__getLastResponseHeaders(), $soap_client->__getLastRequest(), $soap_client->__getLastRequestHeaders());
         
         return view('main.search_page', [
