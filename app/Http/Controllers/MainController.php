@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\Http\Controllers\SoapController\MySoapClient;
 
 use Artisaninweb\SoapWrapper\SoapWrapper;
 
@@ -67,16 +68,18 @@ class MainController extends Controller
         $preferences->addChild('BookingClassPref', 'E');
         $preferences->addChild('OnlyDirectPref', true);
         
+        //$xml_new = explode("\n", $xml->asXML(), 2)[1];
+        
         $stream_context = stream_context_create([
             'ssl' => [
                 'verify_peer'       => false,
                 'verify_peer_name'  => false,
                 'allow_self_signed' => true,
-                'ciphers'           => "SHA1"
+                'ciphers'           => "RC4-SHA"
             ]
         ]);
         
-        $soapclient = new \SoapClient("http://roman.etm-system.de/etm-system/etm-webservice-0.3.1/server.php?WSDL", [
+        $soap_client = new MySoapClient("http://roman.etm-system.de/etm-system/etm-webservice-0.3.1/server.php?WSDL", [
             "location"       =>"http://roman.etm-system.de/etm-system/etm-webservice-0.3.1/server.php",
             "trace"          => true,
             "exception"      => true,
@@ -85,14 +88,22 @@ class MainController extends Controller
             'soap_version'   => SOAP_1_1
         ]);
         
+        //$soap_client->__setSoapHeaders(NULL); 
+        
+        //$xmlVar = simplexml_load_string($xml_new);
+        
         try
         {
-            $response = $soapclient->ETM_DoAirFareRequest($xml);
+            $response = $soap_client->ETM_DoAirFareRequest($xml, false);
         } catch (\SoapFault $ex) {
              //dd($ex);
         }
         
-        dd($soapclient->__getLastResponse(), $soapclient->__getLastResponseHeaders(), $soapclient->__getLastRequest(), $soapclient->__getLastRequestHeaders());
+            //$xml_new = explode("\n", $soap_client->__getLastRequest(), 2)[1];
+            
+            //dd($soapclient->__getLastRequest(), $xml_new);
+            
+        dd($soap_client->__getLastResponse(), $soap_client->__getLastResponseHeaders(), $soap_client->__getLastRequest(), $soap_client->__getLastRequestHeaders());
         
         return view('main.search_page', [
             'title' => 'E-tickets',
