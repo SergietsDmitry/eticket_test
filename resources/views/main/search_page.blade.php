@@ -3,57 +3,79 @@
 @section('content')
 
 <div class="container">
+    @include('flash::message')
     <div class="row">
         <h1>{{$title}}</h1>
         <br>
-        <table class="table">
-            <tbody>
-            <tr>
-                <th>ID</th>
-                <th>Name</th>
-                <th>Type</th>
-                <th>Actions</th>
-            </tr>
-            {{--
-            @foreach ($blocks as $block)
-                <tr>
-                    <td>{{ $block->id }}</td>
-                    <td>{{ $block->name }}</td>
-                    <td>{{ $block->type->name }}</td>
-                    <td>
-                        {{ link_to('/?c=editblock&id=' .  $block->id, 'Edit', array('class="btn btn-primary"')) }}
-                        {{ link_to('/delete_block/' . $block->id, 'Delete', array('class' => "btn btn-danger",
-                            'data-method' => "delete", 'data-token' =>  csrf_token())) }}
-                    </td>
-                </tr>
-            @endforeach
-            --}}
-            </tbody>
-        </table>
         <br>
+        
         {{ Form::open( array(
-            'route'  => 'search.flight',
+            'route'  => 'get.search.id',
             'method' => 'post',
             'id'     => 'ui-form-add-block',
             'class'  => 'form-inline'
         ) ) }}
-        <div class="form-group">
-            {{ Form::text('name', '', array(
+        
+            <div class="row">
+                {{ Form::date('departure_datetime', date('Y-m-d'), array(
+                    'id'          => 'ui-block-name',
+                    'placeholder' => 'Departure datetime',
+                    'required'    => true,
+                    'class'       => 'ui-datepicker form-control'
+                ) ) }}
+            </div>
+            <br>
+            <div class="row">
+                {{ Form::text('original_location', '', array(
+                    'id'          => 'ui-block-name',
+                    'placeholder' => 'Original location',
+                    'minlength'   => 3,
+                    'maxlength'   => 3,
+                    'required'    => true,
+                    'class'       => 'form-control'
+                ) ) }}
+            </div>
+            <br>
+            <div class="row">
+                {{ Form::text('destination_location', '', array(
+                    'id'          => 'ui-block-name',
+                    'placeholder' => 'Destination location',
+                    'minlength'   => 3,
+                    'maxlength'   => 3,
+                    'required'    => true,
+                    'class'       => 'form-control'
+                ) ) }}
+            </div>
+            <br>
+            <div class="row">
+                {{ Form::number('passangers_quantity', '', array(
                 'id'          => 'ui-block-name',
-                'placeholder' => 'Name',
-                'maxlength'   => 255,
+                'placeholder' => 'Passangers quantity',
+                'min'         => 1,
                 'required'    => true,
                 'class'       => 'form-control'
             ) ) }}
-        </div>
+            </div>
+            <br>
 
-        {{ Form::submit( 'Add', array(
-            'id'    => 'ui-add-block-btn',
-            'class' => 'btn btn-success'
-        ) ) }}
+            {{ Form::submit( 'Add', array(
+                'id'    => 'ui-add-block-btn',
+                'class' => 'btn btn-success'
+            ) ) }}
 
         {{ Form::close() }}
     </div>
 </div>
 
 @endsection
+
+@section('javascript')
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('div.alert').not('.alert-important').delay(3000).fadeOut(350);
+            $( ".ui-datepicker" ).datepicker({
+                dateFormat: "yy-mm-dd"
+            });
+        });
+    </script>
+@append

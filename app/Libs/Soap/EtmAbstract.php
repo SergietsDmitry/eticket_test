@@ -46,7 +46,30 @@ abstract class EtmAbstract
             ? $this->soap_client
             : new MySoapClient();
     }
+
+    public function call()
+    {
+        try
+        {
+            $method_name = $this->getMethodName();
+            $response = $this->getSoapClient()->$method_name($this->getRequest());
+            
+            if (isset($response->Errors))
+            {
+                return [
+                    'error'    => true,
+                    'code'     => $response->Errors->Code ?? 0,
+                    'response' => $response->Errors->Message ?? ''];
+            }
+            
+            return ['error' => false, 'response' => $response];
+            
+        } catch (\SoapFault $fault) {
+            //return ['error' => true, 'response' => $fault];
+            return ['error' => true, 'response' => 'Bad request!'];
+        }
+    }
     
     abstract public function getRequest();
-    abstract public function call();
+    abstract protected function getMethodName();
 }

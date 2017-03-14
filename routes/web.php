@@ -1,15 +1,12 @@
 <?php
 
-/*
-|--------------------------------------------------------------------------
-| Web Routes
-|--------------------------------------------------------------------------
-|
-| Here is where you can register web routes for your application. These
-| routes are loaded by the RouteServiceProvider within a group which
-| contains the "web" middleware group. Now create something great!
-|
-*/
-
-Route::get('/', 'MainController@index')->name('index');
-Route::post('/search/flight', 'MainController@search')->name('search.flight');
+Route::group(['middleware' => 'web'], function () {
+    
+    Route::group(['middleware' => 'PingEtmApi'], function () {
+        Route::get('/', 'MainController@index')->name('index');
+    });
+    
+    Route::post('/doAirFareRequest', 'MainController@doAirFareRequest')->name('get.search.id');
+    Route::get('/result/{request_id}', 'MainController@searching')->name('search.flight');
+    Route::post('/getAirFareResult/{request_id}', 'MainController@getAirFareResult')->name('get.search.result');
+});

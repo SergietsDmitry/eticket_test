@@ -13,18 +13,8 @@ class Ping extends EtmAbstract
         return $this->echo_data;
     }
     
-    public function call()
+    protected function getMethodName()
     {
-        try
-        {
-            $response = $this->getSoapClient()->ETM_Ping($this->getRequest());
-            
-            return ($response == $this->echo_data)
-                ? ['error' => false, 'response' => $response]
-                : ['error' => true, 'response' => "Wrong response from ETM_Ping: $response"];
-            
-        } catch (\SoapFault $fault) {
-            return ['error' => true, 'response' => $fault];
-        }
+        return 'ETM_Ping';
     }
 }

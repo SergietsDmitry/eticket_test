@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\SoapController;
+namespace App\Libs\Soap;
 
 use RobRichards\WsePhp\WSSESoap;
 use RobRichards\XMLSecLibs\XMLSecurityKey;
