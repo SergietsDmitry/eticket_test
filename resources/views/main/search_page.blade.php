@@ -9,61 +9,50 @@
         <br>
         <br>
         
-        {{ Form::open( array(
-            'route'  => 'get.search.id',
-            'method' => 'post',
-            'id'     => 'ui-form-add-block',
-            'class'  => 'form-inline'
-        ) ) }}
+        {!! BootForm::open()
+            ->post()
+            ->action(route('get.search.id'))
+            ->attribute('class', 'smart-form')
+            ->attribute('id', 'ui-form-search')
+        !!}
         
-            <div class="row">
-                {{ Form::date('departure_datetime', date('Y-m-d'), array(
-                    'id'          => 'ui-block-name',
-                    'placeholder' => 'Departure datetime',
-                    'required'    => true,
-                    'class'       => 'ui-datepicker form-control'
-                ) ) }}
-            </div>
-            <br>
-            <div class="row">
-                {{ Form::text('original_location', '', array(
-                    'id'          => 'ui-block-name',
-                    'placeholder' => 'Original location',
-                    'minlength'   => 3,
-                    'maxlength'   => 3,
-                    'required'    => true,
-                    'class'       => 'form-control'
-                ) ) }}
-            </div>
-            <br>
-            <div class="row">
-                {{ Form::text('destination_location', '', array(
-                    'id'          => 'ui-block-name',
-                    'placeholder' => 'Destination location',
-                    'minlength'   => 3,
-                    'maxlength'   => 3,
-                    'required'    => true,
-                    'class'       => 'form-control'
-                ) ) }}
-            </div>
-            <br>
-            <div class="row">
-                {{ Form::number('passangers_quantity', '', array(
-                'id'          => 'ui-block-name',
-                'placeholder' => 'Passangers quantity',
-                'min'         => 1,
-                'required'    => true,
-                'class'       => 'form-control'
-            ) ) }}
-            </div>
-            <br>
+            {!! BootForm::date(
+                'Departure datetime', 'departure_datetime', $data->departure_datetime ?? date('YY-mm-dd')
+            )
+            ->attribute('required', true)
+            ->addClass('ui-date')
+            !!}
 
-            {{ Form::submit( 'Add', array(
+            {!! BootForm::text(
+                'Original location', 'original_location', $data->original_location ?? 'KGD'
+            )
+            ->attribute('required', true)
+            ->attribute('minlength', 3)
+            ->attribute('maxlength', 3)
+            !!}
+            
+            {!! BootForm::text(
+                'Destination location', 'destination_location', $data->destination_location ?? 'MOW'
+            )
+            ->attribute('required', true)
+            ->attribute('minlength', 3)
+            ->attribute('maxlength', 3)
+            !!}
+                
+            {!! BootForm::text(
+                'Passangers quantity', 'passangers_quantity', $data->passangers_quantity ?? 1
+            )
+            ->attribute('type', 'number')
+            ->attribute('required', true)
+            ->attribute('min', 1)
+            !!}
+
+            {{ Form::submit( 'Search', array(
                 'id'    => 'ui-add-block-btn',
                 'class' => 'btn btn-success'
             ) ) }}
 
-        {{ Form::close() }}
+        {!! BootForm::close() !!}
     </div>
 </div>
 
@@ -73,7 +62,7 @@
     <script type="text/javascript">
         $(document).ready(function () {
             $('div.alert').not('.alert-important').delay(3000).fadeOut(350);
-            $( ".ui-datepicker" ).datepicker({
+            $( ".ui-date" ).datepicker({
                 dateFormat: "yy-mm-dd"
             });
         });

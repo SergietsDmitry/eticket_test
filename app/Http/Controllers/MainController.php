@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Libs\DoAirFareRequest;
 use App\Libs\GetAirFareResult;
+use Session;
 
 class MainController extends Controller
 {    
@@ -16,8 +17,17 @@ class MainController extends Controller
      */
     public function index(Request $request)
     {
+        if (empty($data = Session::get('session_search_data'))) {
+            $data = new \stdClass;
+            $data->departure_datetime   = '';
+            $data->original_location    = '';
+            $data->destination_location = '';
+            $data->passangers_quantity  = '';
+        }
+        
         return view('main.search_page', [
-            'title' => 'E-tickets'
+            'title' => 'E-tickets',
+            'data'  => $data
         ]);
     }
     
@@ -27,15 +37,26 @@ class MainController extends Controller
             'departure_datetime'   => 'required|date',
             'original_location'    => 'required|string|min:3|max:3|regex:/(^[A-Za-z]+$)+/',
             'destination_location' => 'required|string|min:3|max:3|regex:/(^[A-Za-z]+$)+/',
-            'passangers_quantity'  => 'required|integer|min:1'
+            'passangers_quantity'  => 'required|integer|min:1|regex:/(^[0-9]+$)+/'
         ]);
+        
+        
+        
+        $data = session('session_search_data') ?: new \stdClass;
+        
+        $data->departure_datetime      = $request->input('departure_datetime');
+        $data->original_location       = $request->input('original_location');
+        $data->destination_location    = $request->input('destination_location');
+        $data->passangers_quantity     = $request->input('passangers_quantity');
+        
+        session(['session_search_data' => $data]);
         
         $do_air_fare_request = new DoAirFareRequest();
         
-        $do_air_fare_request->departure_datetime    = date("Y-m-d\TH:i:s", strtotime('2017-03-16 00:00:00'));
-        $do_air_fare_request->original_location     = 'MOW';
-        $do_air_fare_request->destination_location  = 'KGD';
-        $do_air_fare_request->passangers_quantity   = 1;
+        $do_air_fare_request->departure_datetime    = date("Y-m-d\TH:i:s", strtotime($data->departure_datetime . ' 00:00:00'));
+        $do_air_fare_request->original_location     = $data->original_location;
+        $do_air_fare_request->destination_location  = $data->destination_location;
+        $do_air_fare_request->passangers_quantity   = $data->passangers_quantity;
         
         $response = $do_air_fare_request->call();
         

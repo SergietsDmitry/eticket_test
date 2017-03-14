@@ -11,7 +11,8 @@
         "laravel/framework": "5.4.*",
         "laravel/tinker": "~1.0",
         "laravelcollective/html": "^5.4",
-        "robrichards/wse-php": "2.0.1"
+        "robrichards/wse-php": "2.0.1",
+        "adamwathan/bootforms": "0.8.4"
     },
     "require-dev": {
         "fzaninotto/faker": "~1.4",
