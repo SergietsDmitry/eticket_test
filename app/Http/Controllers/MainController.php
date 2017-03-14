@@ -34,11 +34,11 @@ class MainController extends Controller
     {
         $xml = new \SimpleXMLElement('<AirFareRQ type="DoAirFareRQ"></AirFareRQ>');
         
-        $security = $xml->addChild('Security');
-        $security->addAttribute('type', 'SecurityType');
-        $security->addChild('Username', 'test');
-        $security->addChild('Password', 'b4ApBWIaD9qK');
-        $security->addChild('HashKey', 'a1601fb45b');
+        //$security = $xml->addChild('Security');
+        //$security->addAttribute('type', 'SecurityType');
+        //$security->addChild('Username', 'test');
+        //$security->addChild('Password', 'b4ApBWIaD9qK');
+        //$security->addChild('HashKey', 'a1601fb45b');
         
         $period_start = $xml->addChild('OriginDestinationInformation');
         $period_start->addAttribute('type', 'OriginDestinationInformationType');
@@ -68,13 +68,13 @@ class MainController extends Controller
         $preferences->addChild('BookingClassPref', 'E');
         $preferences->addChild('OnlyDirectPref', true);
         
-        $as_xml = $xml->asXML();
-        $as_xml = explode("\n", $as_xml, 2);
-        $as_xml = (isset($as_xml[1])) ? $as_xml[1] : $request;
-        $as_xml = str_replace("\n", '', $as_xml);
-        $as_xml = trim($as_xml);
+        //$as_xml = $xml->asXML();
+        //$as_xml = explode("\n", $as_xml, 2);
+        //$as_xml = (isset($as_xml[1])) ? $as_xml[1] : $request;
+        //$as_xml = str_replace("\n", '', $as_xml);
+        //$as_xml = trim($as_xml);
         
-        $DoAirFareRQ = new \SoapVar($as_xml, XSD_ANYXML);
+        //$DoAirFareRQ = new \SoapVar($as_xml, XSD_ANYXML);
         
         $stream_context = stream_context_create([
             'ssl' => [
@@ -94,12 +94,18 @@ class MainController extends Controller
             'soap_version'   => SOAP_1_1
         ]);
         
-        try
+        /*try
         {
-            $response = $soap_client->ETM_DoAirFareRequest($DoAirFareRQ);
-        } catch (\SoapFault $ex) {
-             //dd($ex);
-        }
+            $soap_client->addUserToken('<username>', '<password>');
+            $response = $soap_client->ETM_DoAirFareRequest($xml);
+            //var_dump($response);
+        } catch (\SoapFault $fault) {
+            //var_dump($fault);
+        }*/
+        
+        $response = $soap_client->ETM_Ping('hello');
+        
+        dd($response);
 
         dd($soap_client->__getLastResponse(), $soap_client->__getLastResponseHeaders(), $soap_client->__getLastRequest(), $soap_client->__getLastRequestHeaders());
         
