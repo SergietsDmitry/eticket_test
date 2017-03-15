@@ -181,6 +181,8 @@ return [
         App\Providers\EventServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
         AdamWathan\BootForms\BootFormsServiceProvider::class,
+        App\Libs\Countries\CountriesServiceProvider::class,
+        App\Libs\Cities\CitiesServiceProvider::class,
 
     ],
 
@@ -234,6 +236,8 @@ return [
         'Form' => Collective\Html\FormFacade::class,
         'Html' => Collective\Html\HtmlFacade::class,
         'BootForm' => AdamWathan\BootForms\Facades\BootForm::class,
+        'Countries' => App\Libs\Countries\CountriesFacade::class,
+        'Cities' => App\Libs\Cities\CitiesFacade::class
     ],
 
 ];

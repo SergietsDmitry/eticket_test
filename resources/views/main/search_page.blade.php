@@ -60,8 +60,22 @@
 
 @section('javascript')
     <script type="text/javascript">
-        $(document).ready(function () {
-            $('div.alert').not('.alert-important').delay(3000).fadeOut(350);
+        $alerts = document.querySelectorAll('div.alert:not(.alert-important)');
+        $alerts.forEach(function($alert) {
+            delay_hide($alert, 3000);
+        });
+        
+        async function delay_hide($object, $ms)
+        {
+            await sleep($ms);
+            $object.style.display = 'none';
+        }
+        
+        function sleep(ms) {
+            return new Promise(resolve => setTimeout(resolve, ms));
+        }
+        
+        $(function() {
             $( ".ui-date" ).datepicker({
                 dateFormat: "yy-mm-dd"
             });

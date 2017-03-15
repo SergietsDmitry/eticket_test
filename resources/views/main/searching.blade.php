@@ -3,7 +3,7 @@
 @section('content')
 
 <div class="container">
-    <div class="ui-search-info jumbotron">
+    <div id="ui-search-info" class="jumbotron">
         <p>
         Поиск авиабилетов
         <i class="fa fa-cog fa-spin fa-1x fa-fw"></i>
@@ -44,13 +44,13 @@
                     }
                     else
                     {
-                        $('#ui-search-info').hide();
-                        $('#ui-search-result').html($data['response']);
+                        document.getElementById('ui-search-info').style.display = 'none';
+                        document.getElementById('ui-search-result').innerHTML = $data['response'];
                     }
                 }
                 else if (xhr.status !== 200) {
-                    //window.location = $fail_url;
-                    console.log('Request failed.  Returned status of ' + xhr.status);
+                    window.location = $fail_url;
+                    //console.log('Request failed.  Returned status of ' + xhr.status);
                 }
             };
             
@@ -61,10 +61,10 @@
         
         $(document).ready(function () {
             
-            $success_url = $('#ui-ajax-request').attr('data-success-url');
-            $fail_url    = $('#ui-ajax-request').attr('data-fail-url');
-            $url         = $('#ui-ajax-request').attr('data-url');
-            $csrf_token  = $('#ui-ajax-request').attr('data-csrf-token');
+            $success_url = document.getElementById('ui-ajax-request').getAttribute('data-success-url');
+            $fail_url    = document.getElementById('ui-ajax-request').getAttribute('data-fail-url');
+            $url         = document.getElementById('ui-ajax-request').getAttribute('data-url');
+            $csrf_token  = document.getElementById('ui-ajax-request').getAttribute('data-csrf-token');
             
             runAjaxRequest($csrf_token, $url, $fail_url);
         });

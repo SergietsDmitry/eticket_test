@@ -7,6 +7,7 @@ use App\Http\Controllers\Controller;
 use App\Libs\DoAirFareRequest;
 use App\Libs\GetAirFareResult;
 use Session;
+use Cities;
 
 class MainController extends Controller
 {    
@@ -17,23 +18,6 @@ class MainController extends Controller
      */
     public function index(Request $request)
     {
-        $get_air_fare_request = new GetAirFareResult();
-        
-        $get_air_fare_request->request_id = 14078;
-        
-        $i = 0;
-        
-        do {
-            $response = $get_air_fare_request->call();
-
-            if ($i !== 0)
-            {
-               sleep(1); 
-            }
-
-            $i++;
-        } while ((isset($response['code'])) && ($response['code'] == 201));
-        
         if (empty($data = Session::get('session_search_data'))) {
             $data = new \stdClass;
             $data->departure_datetime   = '';
@@ -135,11 +119,11 @@ class MainController extends Controller
             ]);
         }
         
-        flash('aeswfwef', 'success');
-        
         return response()->json([
             'status'   => 'success',
-            'response' => $response['response']
+            'response' => view('main.search_result', [
+                'data'  => $response['response']
+            ])->render()
         ]);
     }
     
