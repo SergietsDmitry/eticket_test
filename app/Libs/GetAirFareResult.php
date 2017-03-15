@@ -10,14 +10,12 @@ class GetAirFareResult extends EtmAbstract
     
     public function getRequest()
     {
-        $xml = new \SimpleXMLElement('<AirFareRQ type="GetAirFareRQ"></AirFareRQ>');
+        $main_container = [
+            $this->getSecurityData(),
+            'RequestId' => new \SoapVar($this->request_id, XSD_INT)
+        ];
         
-        $this->addSecurityData($xml);
-        
-        $xml->addChild('RequestId', $this->request_id);
-        
-        return $xml;
-        
+        return new \SoapVar($main_container, SOAP_ENC_OBJECT, 'GetAirFareRQ', null, 'AirFareRQ');
     }
     
     protected function getMethodName()

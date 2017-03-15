@@ -13,23 +13,28 @@ class DoAirFareRequest extends EtmAbstract
     
     public function getRequest()
     {
+        $date = date('Y-m-d\TH:i:s', strtotime($this->departure_datetime . ' 00:00:00'));
         
-        $xml = new \SimpleXMLElement('<AirFareRQ type="DoAirFareRQ"></AirFareRQ>');
+        $destination = new \stdClass();
+        $destination->DepartureDateTime   = new \SoapVar($date, XSD_DATETIME);
+        $destination->OriginLocation      = new \SoapVar($this->original_location, XSD_STRING);
+        $destination->DestinationLocation = new \SoapVar($this->destination_location, XSD_STRING);
         
-        $this->addSecurityData($xml);
-
+        $destination_soap = new \SoapVar($destination, SOAP_ENC_OBJECT, 'OriginDestinationInformationType', null, 'OriginDestinationInformation');
         
-        $period_start = $xml->addChild('OriginDestinationInformation');
-        $period_start->addAttribute('type', 'OriginDestinationInformationType');
-        $period_start->addChild('DepartureDateTime', $this->departure_datetime);
-        $period_start->addChild('OriginLocation', $this->original_location);
-        $period_start->addChild('DestinationLocation', $this->destination_location);
+        $travaller = new \stdClass();
         
-        $traveler_adult = $xml->addChild('TravelerInfoSummary');
-        $traveler_adult->addAttribute('type', 'TravelerInfoSummaryType');
-        $traveler_adult->addChild('Quantity', $this->passangers_quantity);
+        $travaller->Quantity = new \SoapVar($this->passangers_quantity, XSD_INT);
         
-        return $xml;
+        $travaller_soap = new \SoapVar($travaller, SOAP_ENC_OBJECT, 'TravelerInfoSummaryType', null, 'TravelerInfoSummary');
+        
+        $main_container = [
+            $this->getSecurityData(),
+            $destination_soap,
+            $travaller_soap
+        ];
+        
+        return new \SoapVar($main_container, SOAP_ENC_OBJECT, 'DoAirFareRQ', null, 'AirFareRQ');
     }
     
     protected function getMethodName()

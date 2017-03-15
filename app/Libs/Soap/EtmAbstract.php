@@ -29,7 +29,7 @@ abstract class EtmAbstract
         ]);
     }
     
-    public function addSecurityData(&$xml)
+    public function addSecurityDataXml(&$xml)
     {
         $security = $xml->addChild('Security');
         $security->addAttribute('type', 'SecurityType');
@@ -38,6 +38,19 @@ abstract class EtmAbstract
         $security->addChild('HashKey', 'a1601fb45b');
         
         return $security;
+    }
+    
+    public function getSecurityData()
+    {
+        $security = new \stdClass();
+        
+        $security->Username = new \SoapVar('test', XSD_STRING);
+        $security->Password = new \SoapVar('b4ApBWIaD9qK', XSD_STRING);
+        $security->HashKey  = new \SoapVar('a1601fb45b', XSD_STRING);
+        
+        $security_soap = new \SoapVar($security, SOAP_ENC_OBJECT, 'SecurityType', null, 'Security');
+        
+        return $security_soap;
     }
     
     public function getSoapClient()
@@ -52,7 +65,10 @@ abstract class EtmAbstract
         try
         {
             $method_name = $this->getMethodName();
-            $response = $this->getSoapClient()->$method_name($this->getRequest());
+            
+            $request = $this->getRequest();
+            
+            $response = $this->getSoapClient()->$method_name($request);
             
             if (isset($response->Errors))
             {

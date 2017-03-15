@@ -16,7 +16,7 @@ class MainController extends Controller
      * @return string
      */
     public function index(Request $request)
-    {
+    {      
         if (empty($data = Session::get('session_search_data'))) {
             $data = new \stdClass;
             $data->departure_datetime   = '';
@@ -40,8 +40,6 @@ class MainController extends Controller
             'passangers_quantity'  => 'required|integer|min:1|regex:/(^[0-9]+$)+/'
         ]);
         
-        
-        
         $data = session('session_search_data') ?: new \stdClass;
         
         $data->departure_datetime      = $request->input('departure_datetime');
@@ -53,7 +51,7 @@ class MainController extends Controller
         
         $do_air_fare_request = new DoAirFareRequest();
         
-        $do_air_fare_request->departure_datetime    = date("Y-m-d\TH:i:s", strtotime($data->departure_datetime . ' 00:00:00'));
+        $do_air_fare_request->departure_datetime    = $data->departure_datetime;
         $do_air_fare_request->original_location     = $data->original_location;
         $do_air_fare_request->destination_location  = $data->destination_location;
         $do_air_fare_request->passangers_quantity   = $data->passangers_quantity;
