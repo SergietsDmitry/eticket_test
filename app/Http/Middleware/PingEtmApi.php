@@ -9,7 +9,7 @@ class PingEtmApi
 {
     public function handle($request, Closure $next, $guard = null)
     {
-        $ping = new Ping();
+        /*$ping = new Ping();
         
         $response = $ping->call();
         
@@ -19,7 +19,7 @@ class PingEtmApi
                     'title'   => 'E-tickets'
                 ])
             );
-        }
+        }*/
 
         return $next($request);
     }

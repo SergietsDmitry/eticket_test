@@ -29,17 +29,6 @@ abstract class EtmAbstract
         ]);
     }
     
-    public function addSecurityDataXml(&$xml)
-    {
-        $security = $xml->addChild('Security');
-        $security->addAttribute('type', 'SecurityType');
-        $security->addChild('Username', 'test');
-        $security->addChild('Password', 'b4ApBWIaD9qK');
-        $security->addChild('HashKey', 'a1601fb45b');
-        
-        return $security;
-    }
-    
     public function getSecurityData()
     {
         $security = new \stdClass();

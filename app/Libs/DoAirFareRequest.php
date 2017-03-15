@@ -21,10 +21,15 @@ class DoAirFareRequest extends EtmAbstract
         $destination->DestinationLocation = new \SoapVar($this->destination_location, XSD_STRING);
         
         $destination_soap = new \SoapVar($destination, SOAP_ENC_OBJECT, 'OriginDestinationInformationType', null, 'OriginDestinationInformation');
+                
+        $passanger = new \stdClass();
         
-        $travaller = new \stdClass();
+        $passanger->Type = new \SoapVar('ADT', XSD_STRING);
+        $passanger->Quantity = new \SoapVar($this->passangers_quantity, XSD_INT);
         
-        $travaller->Quantity = new \SoapVar($this->passangers_quantity, XSD_INT);
+        $passanger_soap = new \SoapVar($passanger, SOAP_ENC_OBJECT, 'PassengerQuantityType', null, 'Passenger');
+        
+        $travaller = [$passanger_soap];
         
         $travaller_soap = new \SoapVar($travaller, SOAP_ENC_OBJECT, 'TravelerInfoSummaryType', null, 'TravelerInfoSummary');
         

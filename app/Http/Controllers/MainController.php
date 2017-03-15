@@ -16,7 +16,24 @@ class MainController extends Controller
      * @return string
      */
     public function index(Request $request)
-    {      
+    {
+        $get_air_fare_request = new GetAirFareResult();
+        
+        $get_air_fare_request->request_id = 14078;
+        
+        $i = 0;
+        
+        do {
+            $response = $get_air_fare_request->call();
+
+            if ($i !== 0)
+            {
+               sleep(1); 
+            }
+
+            $i++;
+        } while ((isset($response['code'])) && ($response['code'] == 201));
+        
         if (empty($data = Session::get('session_search_data'))) {
             $data = new \stdClass;
             $data->departure_datetime   = '';
