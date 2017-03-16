@@ -22,21 +22,17 @@
             ->attribute('required', true)
             ->addClass('ui-date')
             !!}
-
+            
             {!! BootForm::text(
-                'Original location', 'original_location', $data->original_location ?? 'KGD'
+                'Original location', 'original_location', $data->original_location ?? 'Kaliningrad'
             )
             ->attribute('required', true)
-            ->attribute('minlength', 3)
-            ->attribute('maxlength', 3)
             !!}
             
             {!! BootForm::text(
-                'Destination location', 'destination_location', $data->destination_location ?? 'MOW'
+                'Destination location', 'destination_location', $data->destination_location ?? 'Moscow'
             )
             ->attribute('required', true)
-            ->attribute('minlength', 3)
-            ->attribute('maxlength', 3)
             !!}
                 
             {!! BootForm::text(

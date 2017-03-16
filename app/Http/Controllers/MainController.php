@@ -27,20 +27,13 @@ class MainController extends Controller
         }
         
         return view('main.search_page', [
-            'title' => 'E-tickets',
-            'data'  => $data
+            'title'  => 'E-tickets',
+            'data'   => $data
         ]);
     }
     
     public function doAirFareRequest(Request $request)
     {
-        $this->validate($request, [
-            'departure_datetime'   => 'required|date',
-            'original_location'    => 'required|string|min:3|max:3|regex:/(^[A-Za-z]+$)+/',
-            'destination_location' => 'required|string|min:3|max:3|regex:/(^[A-Za-z]+$)+/',
-            'passangers_quantity'  => 'required|integer|min:1|regex:/(^[0-9]+$)+/'
-        ]);
-        
         $data = session('session_search_data') ?: new \stdClass;
         
         $data->departure_datetime      = $request->input('departure_datetime');
@@ -48,13 +41,23 @@ class MainController extends Controller
         $data->destination_location    = $request->input('destination_location');
         $data->passangers_quantity     = $request->input('passangers_quantity');
         
+        $this->validate($request, [
+            'departure_datetime'   => 'required|date',
+            'original_location'    => 'required|string|regex:/(^[A-Za-z]+$)+/',
+            'destination_location' => 'required|string|regex:/(^[A-Za-z]+$)+/',
+            'passangers_quantity'  => 'required|integer|min:1|regex:/(^[0-9]+$)+/'
+        ]);
+
         session(['session_search_data' => $data]);
+        
+        $original_location    = Cities::getCityByName($data->original_location);
+        $destination_location = Cities::getCityByName($data->destination_location);
         
         $do_air_fare_request = new DoAirFareRequest();
         
         $do_air_fare_request->departure_datetime    = $data->departure_datetime;
-        $do_air_fare_request->original_location     = $data->original_location;
-        $do_air_fare_request->destination_location  = $data->destination_location;
+        $do_air_fare_request->original_location     = $original_location['iso_3166_3'] ?? false;
+        $do_air_fare_request->destination_location  = $destination_location['iso_3166_3'] ?? false;
         $do_air_fare_request->passangers_quantity   = $data->passangers_quantity;
         
         $response = $do_air_fare_request->call();

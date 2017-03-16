@@ -49,7 +49,25 @@ class Cities extends Model {
         foreach($cities as $city)
         {
 
-            if(array_key_exists('iso_3166_3', $city) && $city['iso_3166_3'] == $code)
+            if ((array_key_exists('iso_3166_3', $city) && $city['iso_3166_3'] == $code) ||
+                (array_key_exists('iso_3166_2', $city) && $city['iso_3166_2'] == $code))
+            {
+                return $city;
+            }
+        }
+        
+        return false;
+    }
+    
+    public function getCityByName($name)
+    {
+        $cities = $this->getCities();
+        
+        foreach($cities as $city)
+        {
+
+            if ((array_key_exists('full_name', $city) && $city['full_name'] == $name) ||
+                (array_key_exists('name', $city) && $city['name'] == $name))
             {
                 return $city;
             }
