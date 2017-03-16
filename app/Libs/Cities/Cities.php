@@ -49,8 +49,8 @@ class Cities extends Model {
         foreach($cities as $city)
         {
 
-            if ((array_key_exists('iso_3166_3', $city) && $city['iso_3166_3'] == $code) ||
-                (array_key_exists('iso_3166_2', $city) && $city['iso_3166_2'] == $code))
+            if ((array_key_exists('iso_3166_3', $city) && strtolower($city['iso_3166_3']) == strtolower($code)) ||
+                (array_key_exists('iso_3166_2', $city) && strtolower($city['iso_3166_2']) == strtolower($code)))
             {
                 return $city;
             }
@@ -66,8 +66,8 @@ class Cities extends Model {
         foreach($cities as $city)
         {
 
-            if ((array_key_exists('full_name', $city) && $city['full_name'] == $name) ||
-                (array_key_exists('name', $city) && $city['name'] == $name))
+            if ((array_key_exists('full_name', $city) && strtolower($city['full_name']) == strtolower($name)) ||
+                (array_key_exists('name', $city) && strtolower($city['name']) == strtolower($name)))
             {
                 return $city;
             }

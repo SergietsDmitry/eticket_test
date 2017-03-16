@@ -43,8 +43,8 @@ class MainController extends Controller
         
         $this->validate($request, [
             'departure_datetime'   => 'required|date',
-            'original_location'    => 'required|string|regex:/(^[A-Za-z]+$)+/',
-            'destination_location' => 'required|string|regex:/(^[A-Za-z]+$)+/',
+            'original_location'    => 'required|string|regex:~(^[A-Za-z\.\s\`\-]+$)+~i',
+            'destination_location' => 'required|string|regex:~(^[A-Za-z\.\s\`\-]+$)+~i',
             'passangers_quantity'  => 'required|integer|min:1|regex:/(^[0-9]+$)+/'
         ]);
 
