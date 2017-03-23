@@ -6,6 +6,5 @@
 .env.testing
 .phpstorm.meta.php
 _ide_helper.php
-composer.lock
 Homestead.json
 Homestead.yaml
